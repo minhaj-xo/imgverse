@@ -21,7 +21,6 @@ const Header: React.FC = () => {
 
 const handleProfileClick = () => {
     closeDrawer();
-    
     if (!isLoggedIn) {
       router.visit("/login");
       return;
