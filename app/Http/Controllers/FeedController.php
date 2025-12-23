@@ -10,75 +10,62 @@ use Inertia\Inertia;
 class FeedController extends Controller
 {
     public function index(Request $request)
-    {
-        $sort = $request->input('sort', 'trending');
-        $user = $request->user();
+{
+    $user = $request->user();
 
-        $query = Prompt::publicActive()
-            ->withBasicRelations();
+    $query = Prompt::publicActive()
+        ->withBasicRelations()
+        ->trending();
 
-        if ($sort === 'new') {
-            $query->newest();
-        } else {
-            $sort = 'trending';
-            $query->trending();
-        }
-
-        if ($user) {
-            $query->withExists([
-                'likes as is_liked' => fn ($q) => $q->where('user_id', $user->id),
-                'saves as is_saved' => fn ($q) => $q->where('user_id', $user->id),
-            ]);
-        }
-
-        $prompts = $query->cursorPaginate(
-            perPage: 12,
-            columns: ['*'],
-            cursorName: 'cursor'
-        );
-
-        return Inertia::render('Feed/Index', [
-            'prompts' => $prompts->items(),
-            'nextCursor' => optional($prompts->nextCursor())->encode(),
-            'sort' => $sort,
+    if ($user) {
+        $query->withExists([
+            'likes as is_liked' => fn ($q) => $q->where('user_id', $user->id),
+            'saves as is_saved' => fn ($q) => $q->where('user_id', $user->id),
         ]);
     }
+
+    $prompts = $query->cursorPaginate(
+        perPage: 12,
+        columns: ['*'],
+        cursorName: 'cursor'
+    );
+
+    return Inertia::render('Feed/Index', [
+        'prompts' => $prompts->items(),
+        'nextCursor' => optional($prompts->nextCursor())->encode(),
+    ]);
+}
+
 
     public function fetch(Request $request)
-    {
-        $sort = $request->input('sort', 'trending');
-        $cursor = $request->input('cursor');
-        $user = $request->user();
+{
+    $cursor = $request->input('cursor');
+    $user = $request->user();
 
-        $query = Prompt::publicActive()
-            ->withBasicRelations();
+    $query = Prompt::publicActive()
+        ->withBasicRelations()
+        ->trending();
 
-        if ($sort === 'new') {
-            $query->newest();
-        } else {
-            $sort = 'trending';
-            $query->trending();
-        }
-
-        if ($user) {
-            $query->withExists([
-                'likes as is_liked' => fn ($q) => $q->where('user_id', $user->id),
-                'saves as is_saved' => fn ($q) => $q->where('user_id', $user->id),
-            ]);
-        }
-
-        $prompts = $query->cursorPaginate(
-            perPage: 12,
-            columns: ['*'],
-            cursorName: 'cursor',
-            cursor: $cursor ? Cursor::fromEncoded($cursor) : null
-        );
-
-        return response()->json([
-            'data' => $prompts->items(),
-            'next_cursor' => optional($prompts->nextCursor())->encode(),
+    if ($user) {
+        $query->withExists([
+            'likes as is_liked' => fn ($q) => $q->where('user_id', $user->id),
+            'saves as is_saved' => fn ($q) => $q->where('user_id', $user->id),
         ]);
     }
+
+    $prompts = $query->cursorPaginate(
+        perPage: 12,
+        columns: ['*'],
+        cursorName: 'cursor',
+        cursor: $cursor ? Cursor::fromEncoded($cursor) : null
+    );
+
+    return response()->json([
+        'data' => $prompts->items(),
+        'next_cursor' => optional($prompts->nextCursor())->encode(),
+    ]);
+}
+
 
 public function liked(Request $request)
     {

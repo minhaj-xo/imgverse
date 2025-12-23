@@ -44,7 +44,9 @@ const Header: React.FC<HeaderProps> = ({ onOpenDrawer }) => {
               <Search size={16} className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400" />
             </form>
 
-            <Bell size={20} className="cursor-pointer text-gray-600" />
+            <Link href="/notifications">
+              <Bell size={20} className="cursor-pointer text-gray-600 hover:text-purple-700" />
+            </Link>
 
             <Link href="/prompts/create">
               <div className="flex items-center gap-1 bg-purple-700 text-white px-3 py-1 rounded-full hover:bg-purple-800">

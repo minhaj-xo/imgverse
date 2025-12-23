@@ -18,7 +18,6 @@ const Index: React.FC = () => {
       <FeedList
         initialPrompts={props.prompts}
         initialNextCursor={props.nextCursor}
-        initialSort={props.sort}
       />
     </AppLayout>
   );

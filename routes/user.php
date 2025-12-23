@@ -5,6 +5,7 @@ use App\Http\Controllers\FeedController;
 use App\Http\Controllers\PromptController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\NotificationController;
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/feed/liked', [FeedController::class, 'liked'])
@@ -49,7 +50,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/prompts/{prompt}/comments', [PromptController::class, 'storeComment'])
         ->whereNumber('prompt');
-});
+
+    Route::get('/notifications', [NotificationController::class, 'index'])
+        ->name('notifications.index');});
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
