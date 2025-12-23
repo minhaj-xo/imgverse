@@ -197,10 +197,10 @@ const FeedPost: React.FC<FeedPostProps> = ({ prompt }) => {
         {currentImage && (
           <div className="relative w-full flex items-center flex-col">
             <img
-              className="aspect-square object-cover"
-              src={currentImage.path}
-              alt={prompt.title}
-            />
+  className="aspect-square object-cover"
+  src={`/storage/${currentImage.path}`} // Add /storage/ here
+  alt={prompt.title}
+/>
             {imageCount > 1 && (
               <div className="absolute rounded-full w-fit bg-gray-700 bg-opacity-25 py-1 px-2 flex gap-1 bottom-2 items-center justify-center">
                 {images.map((_, index) => (

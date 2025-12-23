@@ -5,10 +5,9 @@ import {
   Heart,
   House,
   User,
-  Users,
   X,
   LogIn,
-  UserPlus,
+  LogOut,
   Info,
   ChevronDown,
   ChevronRight,
@@ -17,174 +16,104 @@ import {
 type SidebarProps = {
   isOpen: boolean;
   isMoreOpen: boolean;
-  sidebarLeft: number;
   isLoggedIn: boolean;
   onClose: () => void;
   onToggleMore: () => void;
   onProfileClick: () => void;
-  onFollowingClick: () => void;
+  onLogout: () => void;
 };
 
 const Sidebar: React.FC<SidebarProps> = ({
   isOpen,
   isMoreOpen,
-  sidebarLeft,
   isLoggedIn,
   onClose,
   onToggleMore,
   onProfileClick,
-  onFollowingClick,
+  onLogout,
 }) => {
+  const handleNavClick = () => {
+    if (window.innerWidth < 480) onClose();
+  };
+
   return (
-    <aside
-      style={{ left: sidebarLeft }}
-      className={`fixed top-0 z-40 h-full w-64 bg-white transform transition-transform duration-300 ${
-        isOpen ? "translate-x-0" : "-translate-x-full"
-      } md:translate-x-0`}
-    >
-      <div className="p-4 flex items-center justify-between">
-        <span className="font-semibold text-lg">OceanPrompt</span>
-        <button
-          className="text-sm text-gray-800 hover:text-gray-900 md:hidden"
-          onClick={onClose}
-        >
-          <X size={20} />
-        </button>
-      </div>
+    <>
+      {/* Backdrop */}
+      <div
+        className={`fixed inset-0 bg-black/40 z-40 transition-opacity duration-300 min-[480px]:hidden ${
+          isOpen ? "opacity-100 visible" : "opacity-0 invisible"
+        }`}
+        onClick={onClose}
+      />
 
-      <div className="px-4">
-        <div className="h-px w-full bg-gray-200" />
-      </div>
+      <aside
+        className={`
+          fixed min-[480px]:sticky top-0 min-[480px]:top-20 h-full min-[480px]:h-[calc(100vh-80px)] w-64 bg-white 
+          z-50 min-[480px]:z-0 transform transition-transform duration-300 ease-in-out
+          border-r min-[480px]:border-none border-gray-100
+          ${isOpen ? "translate-x-0" : "-translate-x-full min-[480px]:translate-x-0"}
+        `}
+      >
+        <div className="p-4 flex items-center justify-between">
+          <span className="font-semibold text-lg min-[480px]:hidden">OceanPrompt</span>
+          <button
+            className="p-1 text-gray-600 hover:bg-gray-100 rounded-md min-[480px]:hidden"
+            onClick={onClose}
+          >
+            <X size={22} />
+          </button>
+        </div>
 
-      <nav className="p-4 space-y-4">
-        <button
-          className="block w-full text-left text-gray-800 hover:text-gray-900 cursor-pointer"
-          onClick={onClose}
-        >
-          <Link href="/" className="contents">
-            <div className="flex gap-2 items-center">
-              <House size={20} />
-              <span>Home</span>
-            </div>
+        <nav className="p-4 space-y-4">
+          <Link href="/" onClick={handleNavClick} className="flex gap-2 items-center hover:text-purple-700">
+            <House size={20} /> Home
           </Link>
-        </button>
-
-        <button
-          className="block w-full text-left text-gray-800 hover:text-gray-900 cursor-pointer"
-          onClick={onClose}
-        >
-          <Link href="/feed/liked" className="contents">
-            <div className="flex gap-2 items-center">
-              <Heart size={20} />
-              <span>Liked</span>
-            </div>
+          <Link href="/feed/liked" onClick={handleNavClick} className="flex gap-2 items-center hover:text-purple-700">
+            <Heart size={20} /> Liked
           </Link>
-        </button>
-
-        <button
-          className="block w-full text-left text-gray-800 hover:text-gray-900 cursor-pointer"
-          onClick={onClose}
-        >
-          <Link href="/feed/saved" className="contents">
-            <div className="flex gap-2 items-center">
-              <Bookmark size={20} />
-              <span>Saved</span>
-            </div>
+          <Link href="/feed/saved" onClick={handleNavClick} className="flex gap-2 items-center hover:text-purple-700">
+            <Bookmark size={20} /> Saved
           </Link>
-        </button>
 
-        <div className="my-4 h-px w-full bg-gray-200" />
+          <div className="my-4 h-px w-full bg-gray-200" />
 
-        <button
-          className="block w-full text-left text-gray-800 hover:text-gray-900 cursor-pointer"
-          onClick={onProfileClick}
-        >
-          <div className="flex gap-2 items-center">
+          <button onClick={onProfileClick} className="flex gap-2 items-center w-full text-left hover:text-purple-700">
             {isLoggedIn ? <User size={20} /> : <LogIn size={20} />}
-            <span>{isLoggedIn ? "Profile" : "Sign in"}</span>
-          </div>
-        </button>
+            {isLoggedIn ? "Profile" : "Sign in"}
+          </button>
 
-        <button
-          className="block w-full text-left text-gray-800 hover:text-gray-900 cursor-pointer"
-          onClick={onFollowingClick}
-        >
-          <div className="flex gap-2 items-center">
-            {isLoggedIn ? <Users size={20} /> : <UserPlus size={20} />}
-            <span>{isLoggedIn ? "Following" : "Sign up"}</span>
-          </div>
-        </button>
+          <div className="my-4 h-px w-full bg-gray-200" />
 
-        <div className="my-4 h-px w-full bg-gray-200" />
-
-        <button
-          type="button"
-          className="block w-full text-left text-gray-800 hover:text-gray-900 cursor-pointer"
-          onClick={onToggleMore}
-        >
-          <div className="flex items-center justify-between">
+          {/* More Section */}
+          <button onClick={onToggleMore} className="flex justify-between items-center w-full hover:text-purple-700">
             <div className="flex gap-2 items-center">
-              <Info size={20} />
-              <span>More</span>
+              <Info size={20} /> More
             </div>
-            {isMoreOpen ? (
-              <ChevronDown size={18} className="text-gray-500" />
-            ) : (
-              <ChevronRight size={18} className="text-gray-500" />
-            )}
-          </div>
-        </button>
+            {isMoreOpen ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
+          </button>
 
-        {isMoreOpen && (
-          <div className="pl-6 pt-2 space-y-2 text-sm">
-            <button
-              className="block w-full text-left text-gray-700 hover:text-gray-900 cursor-pointer"
-              onClick={onClose}
-            >
-              <Link href="/about" className="contents">
-                <span>About</span>
-              </Link>
-            </button>
-
-            <button
-              className="block w-full text-left text-gray-700 hover:text-gray-900 cursor-pointer"
-              onClick={onClose}
-            >
-              <Link href="/contact" className="contents">
-                <span>Contact</span>
-              </Link>
-            </button>
-
-            <button
-              className="block w-full text-left text-gray-700 hover:text-gray-900 cursor-pointer"
-              onClick={onClose}
-            >
-              <Link href="/privacy-policy" className="contents">
-                <span>Privacy Policy</span>
-              </Link>
-            </button>
-
-            <button
-              className="block w-full text-left text-gray-700 hover:text-gray-900 cursor-pointer"
-              onClick={onClose}
-            >
-              <Link href="/terms" className="contents">
-                <span>Terms &amp; Conditions</span>
-              </Link>
-            </button>
-
-            <button
-              className="block w-full text-left text-gray-700 hover:text-gray-900 cursor-pointer"
-              onClick={onClose}
-            >
-              <Link href="/faq" className="contents">
-                <span>FAQ</span>
-              </Link>
-            </button>
-          </div>
-        )}
-      </nav>
-    </aside>
+          {isMoreOpen && (
+            <div className="pl-6 pt-2 space-y-3 text-sm text-gray-500">
+              <Link href="/about" onClick={handleNavClick} className="block hover:text-purple-700">About</Link>
+              <Link href="/privacy-policy" onClick={handleNavClick} className="block hover:text-purple-700">Privacy</Link>
+              
+              {/* Logout inside More, only if logged in */}
+              {isLoggedIn && (
+                <>
+                  <div className="h-px w-full bg-gray-100 my-1" />
+                  <button 
+                    onClick={onLogout} 
+                    className="flex gap-2 items-center w-full text-left text-red-500 hover:text-red-700 pt-1"
+                  >
+                    <LogOut size={16} /> Logout
+                  </button>
+                </>
+              )}
+            </div>
+          )}
+        </nav>
+      </aside>
+    </>
   );
 };
 

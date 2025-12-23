@@ -1,8 +1,7 @@
-// resources/js/Pages/Profile/Show.tsx
 import React from "react";
 import { Link, usePage } from "@inertiajs/react";
 import AppLayout from "@/Layouts/AppLayout";
-import FeedPost from "@/Components/feed/FeedPost";
+import ProfileFeedPost from "@/Components/feed/ProfileFeedPost";
 import type { SharedData } from "@/types";
 import type { FeedPrompt } from "@/Components/feed/FeedList";
 
@@ -71,22 +70,13 @@ const ProfileShow: React.FC = () => {
 
             <div className="flex flex-wrap gap-4 mt-3 text-xs sm:text-sm text-gray-700">
               <span>
-                <span className="font-semibold">
-                  {profileUser.prompts_count}
-                </span>{" "}
-                prompts
+                <span className="font-semibold">{profileUser.prompts_count}</span> prompts
               </span>
               <span>
-                <span className="font-semibold">
-                  {profileUser.followers_count}
-                </span>{" "}
-                followers
+                <span className="font-semibold">{profileUser.followers_count}</span> followers
               </span>
               <span>
-                <span className="font-semibold">
-                  {profileUser.following_count}
-                </span>{" "}
-                following
+                <span className="font-semibold">{profileUser.following_count}</span> following
               </span>
             </div>
 
@@ -95,22 +85,6 @@ const ProfileShow: React.FC = () => {
                 {profileUser.bio}
               </p>
             )}
-
-            <div className="flex flex-wrap gap-3 mt-3 text-xs text-gray-600">
-              {profileUser.location && (
-                <span className="truncate">{profileUser.location}</span>
-              )}
-              {profileUser.website_url && (
-                <a
-                  href={profileUser.website_url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-purple-600 hover:text-purple-700 truncate"
-                >
-                  {profileUser.website_url.replace(/^https?:\/\//, "")}
-                </a>
-              )}
-            </div>
           </div>
         </div>
 
@@ -122,21 +96,16 @@ const ProfileShow: React.FC = () => {
 
         {prompts.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center text-sm text-gray-500">
-            {isMe ? (
-              <>
-                <p>You have not posted any prompts yet.</p>
-                <p className="mt-1">
-                  Share your first prompt from the Post button.
-                </p>
-              </>
-            ) : (
-              <p>This user has not posted any prompts yet.</p>
-            )}
+            <p>{isMe ? "You have not posted any prompts yet." : "This user has not posted any prompts yet."}</p>
           </div>
         ) : (
           <div className="flex flex-col gap-6">
             {prompts.map((prompt) => (
-              <FeedPost key={prompt.id} prompt={prompt} />
+              <ProfileFeedPost 
+                key={prompt.id} 
+                prompt={prompt} 
+                isOwner={isMe} 
+              />
             ))}
           </div>
         )}

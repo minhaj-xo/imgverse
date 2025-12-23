@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FeedController;
 use App\Http\Controllers\PromptController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/feed/liked', [FeedController::class, 'liked'])
@@ -45,4 +46,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::put('/settings/profile', [ProfileController::class, 'update'])
         ->name('profile.update');
+
+    Route::post('/prompts/{prompt}/comments', [PromptController::class, 'storeComment'])
+        ->whereNumber('prompt');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+        ->name('logout');
 });

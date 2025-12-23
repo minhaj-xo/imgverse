@@ -167,7 +167,7 @@ const FeedList: React.FC<FeedListProps> = ({
   };
 
   return (
-    <div className="w-full sm:max-w-2xl items-center mx-auto">
+    <div className="w-full items-center mx-auto">
       <div className="px-4 pt-2">
         <div className="flex gap-6 text-sm border-b border-gray-200">
           <div className="relative">
